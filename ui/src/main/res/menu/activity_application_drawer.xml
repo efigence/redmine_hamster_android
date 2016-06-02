@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_started"
+                android:icon="@drawable/ic_started"
+                android:checked="true"
+                android:title="@string/nav_started"/>
+        <item
+                android:id="@+id/nav_ready_to_report"
+                android:icon="@drawable/ic_ready_to_report"
+                android:title="@string/nav_ready_to_report"/>
+        <item
+                android:id="@+id/nav_recently_used"
+                android:icon="@drawable/ic_recently_used"
+                android:title="@string/nav_recently_used"/>
+        <item
+                android:id="@+id/nav_assigned_to_me"
+                android:icon="@drawable/ic_assigned_to_me"
+                android:title="@string/nav_assigned_to_me" />
+
+        <item android:id="@+id/nav_settings"
+              android:icon="@drawable/ic_settings"
+              android:title="@string/action_settings"
+              android:orderInCategory="100" />
+    </group>
+
+</menu>

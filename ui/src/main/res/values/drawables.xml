@@ -1,0 +1,7 @@
+<resources>
+    <item name="ic_started" type="drawable">@android:drawable/ic_menu_camera</item>
+    <item name="ic_ready_to_report" type="drawable">@android:drawable/ic_menu_gallery</item>
+    <item name="ic_recently_used" type="drawable">@android:drawable/ic_menu_slideshow</item>
+    <item name="ic_assigned_to_me" type="drawable">@android:drawable/ic_menu_manage</item>
+    <item name="ic_settings" type="drawable">@android:drawable/ic_menu_manage</item>
+</resources>
