@@ -19,18 +19,18 @@ import java.util.Map;
 public class HamsterEntityStoreRest extends BaseRestApi implements HamsterEntityStore {
 
     private static final String STARTED = "api/hamster/my_active_hamsters";
-    private static final String STOPPED = "api/hamster/my_ready_to_raport_hamsters";
+    private static final String STOPPED = "api/hamster/my_ready_to_report_hamsters";
     private static final String ASSIGN_TO_ME = "api/hamster/my_issues";
     private static final String MY_RECENTLY_USED = "api/hamster/mru";
 
     private static final String START = "api/hamster/start";
     private static final String STOP = "api/hamster/stop";
     private static final String DELETE = "api/hamster/delete?id=%s";
-    private static final String REPORT_TIME = "api/hamster/raport_time";
+    private static final String REPORT_TIME = "api/hamster/report_time";
 
     private static final String START_ISSUE_PARAM_NAME = "issue_id";
     private static final String STOP_ISSUE_PARAM_NAME = "hamster_issue_id";
-    private static final String REPORT_TIME_ENTRY_PARAM_NAME = "time_entry";
+    private static final String REPORT_TIME_ENTRY_PARAM_NAME = "hamster_id";
 
     @Inject
     public HamsterEntityStoreRest(OkHttpClient httpClient,
@@ -89,23 +89,8 @@ public class HamsterEntityStoreRest extends BaseRestApi implements HamsterEntity
 
     @Override
     public void reportIssue(String issueId) {
-        HamsterEntity hamsterEntity = getHamsterEntity(issueId);
-        if (hamsterEntity == null){
-            throw new IllegalArgumentException("Doesn't exist hamster issue with id: " + issueId);
-        }
-        Call call = postCall(REPORT_TIME, REPORT_TIME_ENTRY_PARAM_NAME, gson.toJson(HamsterTimeEntry.from(hamsterEntity)));
+        Call call = postCall(REPORT_TIME, REPORT_TIME_ENTRY_PARAM_NAME, issueId);
         execute(call);
-    }
-
-    private HamsterEntity getHamsterEntity(String id){
-        for (List<HamsterEntity> issues : getStoppedIssues().values()){
-            for (HamsterEntity issue: issues) {
-                if (id.equals(issue.getId())){
-                    return issue;
-                }
-            }
-        }
-        return null;
     }
 
     private Type listOfMyIssueEntities() {
@@ -120,40 +105,4 @@ public class HamsterEntityStoreRest extends BaseRestApi implements HamsterEntity
         return new TypeToken<List<HamsterEntity>>(){}.getType();
     }
 
-    private static class HamsterTimeEntry {
-
-        private int issue_id;
-        private String spent_on;
-        private int hamster_id;
-        private double hours;
-
-        private HamsterTimeEntry(){
-            // do nothing
-        }
-
-        public int getIssue_id() {
-            return issue_id;
-        }
-
-        public String getSpent_on() {
-            return spent_on;
-        }
-
-        public int getHamster_id() {
-            return hamster_id;
-        }
-
-        public double getHours() {
-            return hours;
-        }
-
-        public static HamsterTimeEntry from(HamsterEntity entity){
-            HamsterTimeEntry timeEntry = new HamsterTimeEntry();
-            timeEntry.issue_id = Integer.parseInt(entity.getIssue_id());
-            timeEntry.hamster_id = Integer.parseInt(entity.getId());
-            timeEntry.spent_on = entity.getStart_at().substring(0, entity.getStart_at().indexOf('T'));
-            timeEntry.hours = Double.parseDouble(entity.getSpend_time());
-            return timeEntry;
-        }
-    }
 }
