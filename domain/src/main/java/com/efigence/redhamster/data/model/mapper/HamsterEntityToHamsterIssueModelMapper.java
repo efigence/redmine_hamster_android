@@ -59,7 +59,9 @@ public class HamsterEntityToHamsterIssueModelMapper {
             return null;
         }
         try {
-            return DATE_FORMAT.parse(date);
+            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+            calendar.setTime(DATE_FORMAT.parse(date));
+            return calendar.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
