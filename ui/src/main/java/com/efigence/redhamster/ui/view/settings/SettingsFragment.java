@@ -48,7 +48,7 @@ public class SettingsFragment extends BaseFragment implements SettingsPresenter.
         getApplicationComponent().inject(this);
         View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         ButterKnife.bind(this, rootView);
-
+        apiAccessKeyEditText.setOnClickListener(view -> apiAccessKeyEditText.setText(""));
         return rootView;
     }
 
