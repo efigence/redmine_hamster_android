@@ -1,7 +1,6 @@
 package com.efigence.redhamster.ui.view;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -76,12 +75,7 @@ public class ApplicationActivity extends BaseAppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton startIssueActionButton = (FloatingActionButton) findViewById(R.id.startIssueActionButton);
-        startIssueActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.onDisplayStartIssue(null);
-            }
-        });
+        startIssueActionButton.setOnClickListener(view -> presenter.onDisplayStartIssue(null));
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -110,16 +104,6 @@ public class ApplicationActivity extends BaseAppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-/*        if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -187,16 +171,13 @@ public class ApplicationActivity extends BaseAppCompatActivity
         issueIdView.setText(issueId);
         new AlertDialog.Builder(this)
                 .setView(dialogView)
-                .setPositiveButton(R.string.startIssueStart, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String issue = issueIdView.getText().toString();
-                        if (issue.isEmpty()){
-                            issueIdView.setError("Filed cannot be empty.");
-                            return;
-                        }
-                        presenter.startIssue(issue);
+                .setPositiveButton(R.string.startIssueStart, (dialog, which) -> {
+                    String issue = issueIdView.getText().toString();
+                    if (issue.isEmpty()){
+                        issueIdView.setError("Filed cannot be empty.");
+                        return;
                     }
+                    presenter.startIssue(issue);
                 })
                 .create()
                 .show();

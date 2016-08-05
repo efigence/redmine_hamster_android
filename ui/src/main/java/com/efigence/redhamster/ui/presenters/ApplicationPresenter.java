@@ -1,6 +1,5 @@
 package com.efigence.redhamster.ui.presenters;
 
-import android.os.AsyncTask;
 import com.efigence.redhamster.data.ApiAccessKeyProvider;
 import com.efigence.redhamster.domain.usecase.StartIssueUseCase;
 import com.efigence.redhamster.ui.BasePresenter;
@@ -50,18 +49,8 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
     }
 
     public void startIssue(String issueId){
-        new AsyncTask<String, Void, Void>(){
-
-            @Override
-            protected Void doInBackground(String... params) {
-                return startIssueUseCase.execute(params[0]);
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                onDisplayStartedIssue();
-            }
-        }.execute(issueId);
+        createObservableOnUi(startIssueUseCase, issueId)
+                .subscribe(aVoid -> ui.displayStaredIssue());
     }
 
     public interface ApplicationUI extends UI {

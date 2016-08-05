@@ -1,16 +1,17 @@
 package com.efigence.redhamster.ui.presenters;
 
-import android.os.AsyncTask;
-import com.efigence.redhamster.domain.model.HamsterIssue;
 import com.efigence.redhamster.domain.usecase.GetStartedIssueUseCase;
 import com.efigence.redhamster.domain.usecase.StopIssueUseCase;
 import com.efigence.redhamster.ui.BasePresenter;
 import com.efigence.redhamster.ui.UI;
 import com.efigence.redhamster.ui.model.HamsterIssueViewModel;
 import com.efigence.redhamster.ui.model.mapper.HamsterIssueToViewModelMapper;
+import rx.Observable;
+import rx.Subscription;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.StartedIssueUI> {
@@ -18,6 +19,8 @@ public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.S
     private final GetStartedIssueUseCase startedIssueUseCase;
     private final StopIssueUseCase stopIssueUseCase;
     private final HamsterIssueToViewModelMapper modelMapper;
+
+    private Subscription timer;
 
     @Inject
     public StartedIssuePresenter(GetStartedIssueUseCase startedIssueUseCase,
@@ -29,33 +32,35 @@ public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.S
     }
 
     public void onDisplay() {
-        new AsyncTask<Void, Void, HamsterIssue>() {
-            @Override
-            protected HamsterIssue doInBackground(Void... params) {
-                return startedIssueUseCase.execute();
-            }
+        createObservableOnUi(startedIssueUseCase)
+                .map(issue -> modelMapper.toViewModel(issue))
+                .subscribe(issue -> ui.display(issue));
+    }
 
-            @Override
-            protected void onPostExecute(HamsterIssue hamsterIssue) {
-                ui.display(modelMapper.toViewModel(hamsterIssue));
-            }
-        }.execute();
+    public void startTimer(HamsterIssueViewModel issueViewModel) {
+        stopTimer();
+        timer = subscribeOnUi(Observable.interval(1, TimeUnit.SECONDS))
+                .subscribe(time -> ui.updateSpentTime(issueViewModel.getSpentTime()));
     }
 
     public void stopIssue(String issueId) {
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... params) {
-                stopIssueUseCase.execute(params[0]);
-                StartedIssuePresenter.this.onDisplay();
-                return null;
-            }
-        }.execute(issueId);
+        createObservableOnUi(stopIssueUseCase, issueId)
+                .subscribe(aVoid -> {
+                    stopTimer();
+                    onDisplay();
+                });
+    }
+
+    private void stopTimer(){
+        if (timer != null && !timer.isUnsubscribed()){
+            timer.unsubscribe();
+        }
     }
 
     public interface StartedIssueUI extends UI {
 
         void display(HamsterIssueViewModel viewModel);
+        void updateSpentTime(String spentTime);
 
     }
 }

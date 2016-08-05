@@ -1,6 +1,5 @@
 package com.efigence.redhamster.ui.presenters.list;
 
-import android.os.AsyncTask;
 import com.efigence.redhamster.domain.model.Issue;
 import com.efigence.redhamster.domain.usecase.UseCaseArgumentless;
 import com.efigence.redhamster.ui.BasePresenter;
@@ -23,7 +22,8 @@ public class IssuesListPresenter extends BasePresenter<IssuesListPresenter.Issue
     }
 
     public void onDisplayIssues(){
-        new LoadIssuesTask(useCase).execute();
+        createObservableOnUi(useCase)
+                .subscribe(issues -> ui.refreshIssues(mapper.toViewModel(issues)));
     }
 
     public interface IssueListUI extends UI {
@@ -31,26 +31,5 @@ public class IssuesListPresenter extends BasePresenter<IssuesListPresenter.Issue
         void refreshIssues(List<IssueViewModel> issues);
 
     }
-
-    private class LoadIssuesTask extends AsyncTask<Void, Void, List<Issue>> {
-
-        private final UseCaseArgumentless<List<Issue>> useCase;
-
-        private LoadIssuesTask(UseCaseArgumentless<List<Issue>> useCase){
-            this.useCase = useCase;
-        }
-
-        @Override
-        protected List<Issue> doInBackground(Void... params) {
-            return useCase.execute();
-        }
-
-        @Override
-        protected void onPostExecute(List<Issue> issues) {
-            ui.refreshIssues(mapper.toViewModel(issues));
-        }
-
-    }
-
 
 }

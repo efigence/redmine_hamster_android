@@ -1,6 +1,5 @@
 package com.efigence.redhamster.ui.presenters.list;
 
-import android.os.AsyncTask;
 import com.efigence.redhamster.domain.model.HamsterIssue;
 import com.efigence.redhamster.domain.usecase.UseCase;
 import com.efigence.redhamster.domain.usecase.UseCaseArgumentless;
@@ -27,32 +26,18 @@ public class ReadyToReportListPresenter extends BasePresenter<ReadyToReportListP
     }
 
     public void onDisplayIssues(){
-        new LoadIssuesTask(loadIssuesUseCase).execute();
+        createObservableOnUi(loadIssuesUseCase)
+                .subscribe(issues -> ui.refreshIssues(issues));
     }
 
     public void reportIssue(HamsterIssue issue) {
-        createExecutableAsyncTask(reportIssueUseCase)
-                .execute(String.valueOf(issue.getId()));
+        createObservableOnUi(reportIssueUseCase, String.valueOf(issue.getId()))
+                .subscribe(aVoid -> onDisplayIssues());
     }
 
     public void deleteIssue(HamsterIssue issue) {
-        createExecutableAsyncTask(deleteIssueUseCase)
-                .execute(String.valueOf(issue.getId()));
-    }
-
-    private AsyncTask<String, Void, Void> createExecutableAsyncTask(final UseCase<Void, String> useCase) {
-        return new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... params) {
-                useCase.execute(params[0]);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                onDisplayIssues();
-            }
-        };
+        createObservableOnUi(deleteIssueUseCase, String.valueOf(issue.getId()))
+                .subscribe(aVoid -> onDisplayIssues());
     }
 
     public interface ReadyToReportListUI extends UI {
@@ -60,26 +45,5 @@ public class ReadyToReportListPresenter extends BasePresenter<ReadyToReportListP
         void refreshIssues(Map<String, List<HamsterIssue>> issues);
 
     }
-
-    private class LoadIssuesTask extends AsyncTask<Void, Void, Map<String, List<HamsterIssue>>> {
-
-        private final UseCaseArgumentless<Map<String, List<HamsterIssue>>> useCase;
-
-        private LoadIssuesTask(UseCaseArgumentless<Map<String, List<HamsterIssue>>> useCase){
-            this.useCase = useCase;
-        }
-
-        @Override
-        protected Map<String, List<HamsterIssue>> doInBackground(Void... params) {
-            return useCase.execute();
-        }
-
-        @Override
-        protected void onPostExecute(Map<String, List<HamsterIssue>> issues) {
-            ui.refreshIssues(issues);
-        }
-
-    }
-
 
 }

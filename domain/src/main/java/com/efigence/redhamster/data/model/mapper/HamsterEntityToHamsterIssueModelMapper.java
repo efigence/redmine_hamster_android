@@ -1,6 +1,8 @@
 package com.efigence.redhamster.data.model.mapper;
 
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.efigence.redhamster.data.model.HamsterEntity;
 import com.efigence.redhamster.data.model.IssueEntity;
 import com.efigence.redhamster.data.store.IssueEntityStore;
@@ -45,11 +47,10 @@ public class HamsterEntityToHamsterIssueModelMapper {
     public Map<String, List<HamsterIssue>> toModel(Map<String, List<HamsterEntity>> entities){
         Map<String, List<HamsterIssue>> result = new HashMap<>(entities.size());
         for (Map.Entry<String, List<HamsterEntity>> entry : entities.entrySet()){
-            List<HamsterIssue> r = new ArrayList<>(entities.size());
-            for (HamsterEntity entity: entry.getValue()) {
-                r.add(toModel(entity));
-            }
-            result.put(entry.getKey(), r);
+            result.put(entry.getKey(),
+                    Stream.of(entry.getValue())
+                            .map(entity -> toModel(entity))
+                            .collect(Collectors.toList()));
         }
         return result;
     }

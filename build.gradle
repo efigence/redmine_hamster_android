@@ -5,8 +5,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -21,4 +23,44 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+configure(subprojects - project(':ui')) {
+    apply plugin: 'com.android.library'
+    apply plugin: 'me.tatarka.retrolambda'
+
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        lintOptions {
+            abortOnError false
+        }
+
+    }
+
+    dependencies {
+        compile 'com.annimon:stream:1.0.8'
+    }
+}
+
+configure(project(':ui')) {
+    apply plugin: 'com.android.application'
+    apply plugin: 'me.tatarka.retrolambda'
+
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        lintOptions {
+            abortOnError false
+        }
+
+    }
+
+    dependencies {
+        compile 'com.annimon:stream:1.0.8'
+    }
 }

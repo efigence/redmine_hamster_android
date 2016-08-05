@@ -2,7 +2,6 @@ package com.efigence.redhamster.ui.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ import com.efigence.redhamster.ui.view.base.BaseFragment;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Singleton
 public class StartedIssueFragment extends BaseFragment implements StartedIssuePresenter.StartedIssueUI {
@@ -42,10 +39,6 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
 
     @Inject
     StartedIssuePresenter presenter;
-    private HamsterIssueViewModel viewModel;
-
-    private Timer timer;
-    private TimerTask timerTask;
 
     @Inject
     public StartedIssueFragment(){
@@ -60,7 +53,6 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
     @Override
     public void onPause() {
         super.onPause();
-        cancelTimer();
         presenter.onDetach();
     }
 
@@ -80,8 +72,6 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
 
     @Override
     public void display(HamsterIssueViewModel viewModel) {
-        this.viewModel = viewModel;
-        cancelTimer();
         if (viewModel == null){
             layout.setVisibility(View.INVISIBLE);
             startedIssueInfo.setVisibility(View.VISIBLE);
@@ -91,8 +81,13 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
             startDate.setText(viewModel.getStartDate());
             layout.setVisibility(View.VISIBLE);
             startedIssueInfo.setVisibility(View.INVISIBLE);
-            reScheduleTimer();
+            presenter.startTimer(viewModel);
         }
+    }
+
+    @Override
+    public void updateSpentTime(String spentTime) {
+        startedIssueSpentTime.setText(spentTime);
     }
 
     @OnClick(R.id.startedIssueStopButton)
@@ -100,38 +95,4 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
         presenter.stopIssue(issueId.getText().toString());
     }
 
-    private void refreshSpentTime() {
-        if (viewModel != null) {
-            FragmentActivity activity = getActivity();
-            if (activity == null){
-                return;
-            }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    startedIssueSpentTime.setText(viewModel.getSpentTime());
-                }
-            });
-        }
-    }
-
-    public void reScheduleTimer(){
-        cancelTimer();
-        timer = new Timer();
-        timerTask = new RefreshSpentTimerTask();
-        timer.schedule(timerTask, 0, 1000);
-    }
-
-    public void cancelTimer(){
-        if (timer != null){
-            timer.cancel();
-        }
-    }
-
-    private class RefreshSpentTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            refreshSpentTime();
-        }
-    }
 }
