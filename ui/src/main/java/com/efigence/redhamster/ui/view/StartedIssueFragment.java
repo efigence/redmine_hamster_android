@@ -73,15 +73,14 @@ public class StartedIssueFragment extends BaseFragment implements StartedIssuePr
     @Override
     public void display(HamsterIssueViewModel viewModel) {
         if (viewModel == null){
-            layout.setVisibility(View.INVISIBLE);
+            layout.setVisibility(View.GONE);
             startedIssueInfo.setVisibility(View.VISIBLE);
         } else {
             issueId.setText(viewModel.getId());
             subject.setText(viewModel.getIssueViewModel().getSubject());
             startDate.setText(viewModel.getStartDate());
             layout.setVisibility(View.VISIBLE);
-            startedIssueInfo.setVisibility(View.INVISIBLE);
-            presenter.startTimer(viewModel);
+            startedIssueInfo.setVisibility(View.GONE);
         }
     }
 

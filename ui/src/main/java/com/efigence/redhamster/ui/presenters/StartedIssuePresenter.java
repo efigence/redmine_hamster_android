@@ -34,10 +34,15 @@ public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.S
     public void onDisplay() {
         createObservableOnUi(startedIssueUseCase)
                 .map(issue -> modelMapper.toViewModel(issue))
-                .subscribe(issue -> ui.display(issue));
+                .subscribe(issue -> {
+                    ui.display(issue);
+                    if (issue != null){
+                        startTimer(issue);
+                    }
+                });
     }
 
-    public void startTimer(HamsterIssueViewModel issueViewModel) {
+    private void startTimer(HamsterIssueViewModel issueViewModel) {
         stopTimer();
         timer = subscribeOnUi(Observable.interval(1, TimeUnit.SECONDS))
                 .subscribe(time -> ui.updateSpentTime(issueViewModel.getSpentTime()));
