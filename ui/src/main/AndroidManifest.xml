@@ -8,6 +8,7 @@
             android:name=".AndroidApplication"
             android:allowBackup="true"
             android:label="@string/app_name"
+            android:icon="@drawable/ic_schedule_black_48dp"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
