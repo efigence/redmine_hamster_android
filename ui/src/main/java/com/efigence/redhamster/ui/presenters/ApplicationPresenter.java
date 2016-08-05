@@ -13,6 +13,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
 
     private final ApiAccessKeyProvider apiAccessKeyProvider;
     private final StartIssueUseCase startIssueUseCase;
+    private boolean started;
 
     @Inject
     public ApplicationPresenter(ApiAccessKeyProvider apiAccessKeyProvider, StartIssueUseCase startIssueUseCase){
@@ -25,10 +26,10 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
         super.onAttach(ui);
         if (!isAccessKeySpecified()){
             ui.displaySettings();
-        } else {
+        } else if (!started){
+            started = true;
             ui.displayStaredIssue();
         }
-
     }
 
     public boolean isAccessKeySpecified(){
