@@ -42,18 +42,10 @@ public class ApplicationActivity extends BaseAppCompatActivity
     @Inject @Named("MyRecentlyUsedFragment") IssuesListFragment recentlyUsed;
     @Inject SettingsFragment settingsFragment;
 
-    private boolean started = false;
-
     @Override
     protected void onResume() {
         super.onResume();
         presenter.onAttach(this);
-        if (!presenter.isAccessKeySpecified()){
-            presenter.onDisplaySettings();
-        } else if (!started){
-            started = true;
-            presenter.onDisplayStartedIssue();
-        }
     }
 
     @Override

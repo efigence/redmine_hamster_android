@@ -20,6 +20,17 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
         this.startIssueUseCase = startIssueUseCase;
     }
 
+    @Override
+    public void onAttach(ApplicationUI ui) {
+        super.onAttach(ui);
+        if (!isAccessKeySpecified()){
+            ui.displaySettings();
+        } else {
+            ui.displayStaredIssue();
+        }
+
+    }
+
     public boolean isAccessKeySpecified(){
         return apiAccessKeyProvider.isAccessKeySet();
     }
