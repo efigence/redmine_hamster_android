@@ -1,6 +1,7 @@
 package com.efigence.redhamster.ui.view;
 
 import android.app.AlertDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -126,8 +127,13 @@ public class ApplicationActivity extends BaseAppCompatActivity
             presenter.onDisplayAllIssues();
         } else if (id == R.id.nav_settings) {
             presenter.onDisplaySettings();
+        } else if (id == R.id.nav_exit){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                finishAffinity();
+            } else {
+                finish();
+            }
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

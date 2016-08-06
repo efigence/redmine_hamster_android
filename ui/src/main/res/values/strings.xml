@@ -27,4 +27,5 @@
     <string name="hide_filters">hide filters</string>
     <string name="select_project">[select project]</string>
     <string name="select_status">[select status]</string>
+    <string name="action_exit">Exit</string>
 </resources>
