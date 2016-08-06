@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -55,12 +54,9 @@ public class IssuesListFragment extends BaseFragment implements IssuesListPresen
         int identifier = getResources().getIdentifier("issues_tab_" + sectionNumber, "string", getContext().getPackageName());
         textView.setText(getString(identifier));
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                IssueViewModel item = (IssueViewModel) adapter.getItem(position);
-                applicationPresenter.onDisplayStartIssue(item.getId());
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            IssueViewModel item = (IssueViewModel) adapter.getItem(position);
+            applicationPresenter.onDisplayStartIssue(item.getId());
         });
         return rootView;
     }

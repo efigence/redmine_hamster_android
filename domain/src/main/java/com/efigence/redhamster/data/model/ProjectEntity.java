@@ -17,6 +17,7 @@ public class ProjectEntity {
     private String name;
     private String identifier;
     private String description;
+    private Integer status;
     private ProjectEntity parent;
 
     public String getId() {
@@ -33,6 +34,10 @@ public class ProjectEntity {
 
     public String getDescription() {
         return description;
+    }
+
+    public Integer getStatus() {
+        return status;
     }
 
     public ProjectEntity getParent() {

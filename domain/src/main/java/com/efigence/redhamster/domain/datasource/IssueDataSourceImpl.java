@@ -1,12 +1,15 @@
 package com.efigence.redhamster.domain.datasource;
 
 import com.efigence.redhamster.data.model.HamsterEntity;
+import com.efigence.redhamster.data.model.IssueEntity;
 import com.efigence.redhamster.data.model.MyIssueEntity;
 import com.efigence.redhamster.data.model.mapper.HamsterEntityToHamsterIssueModelMapper;
 import com.efigence.redhamster.data.model.mapper.MyIssueEntityToIssueModelMapper;
 import com.efigence.redhamster.data.store.HamsterEntityStore;
+import com.efigence.redhamster.data.store.IssueEntityStore;
 import com.efigence.redhamster.domain.model.HamsterIssue;
 import com.efigence.redhamster.domain.model.Issue;
+import com.efigence.redhamster.domain.model.IssuesQuery;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,12 +22,15 @@ public class IssueDataSourceImpl implements IssueDataSource {
     private final HamsterEntityStore hamsterEntityStore;
     private final HamsterEntityToHamsterIssueModelMapper hamsterEntityMapper;
     private final MyIssueEntityToIssueModelMapper myIssueEntityMapper;
+    private final IssueEntityStore issueEntityStore;
 
     @Inject
-    public IssueDataSourceImpl(HamsterEntityStore hamsterEntityStore, HamsterEntityToHamsterIssueModelMapper mapper, MyIssueEntityToIssueModelMapper myIssueEntityMapper){
+    public IssueDataSourceImpl(HamsterEntityStore hamsterEntityStore, HamsterEntityToHamsterIssueModelMapper mapper,
+                               MyIssueEntityToIssueModelMapper myIssueEntityMapper, IssueEntityStore issueEntityStore){
         this.hamsterEntityStore = hamsterEntityStore;
         this.hamsterEntityMapper = mapper;
         this.myIssueEntityMapper = myIssueEntityMapper;
+        this.issueEntityStore = issueEntityStore;
     }
 
     @Override
@@ -51,6 +57,12 @@ public class IssueDataSourceImpl implements IssueDataSource {
     public List<Issue> getMyRecentlyUsed() {
         List<MyIssueEntity> myRecentlyUsed = hamsterEntityStore.getMyRecentlyUsed();
         return myIssueEntityMapper.toModel(myRecentlyUsed);
+    }
+
+    @Override
+    public List<Issue> getIssues(IssuesQuery query) {
+        List<IssueEntity> issues = issueEntityStore.getIssues(query);
+        return hamsterEntityMapper.toModel(issues);
     }
 
     @Override

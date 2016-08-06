@@ -1,12 +1,10 @@
 package com.efigence.redhamster.ui.di.modules;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import com.efigence.redhamster.data.ApiAccessKeyProvider;
 import com.efigence.redhamster.data.ApiAccessKeyValidator;
-import com.efigence.redhamster.data.store.HamsterEntityStore;
-import com.efigence.redhamster.data.store.HamsterEntityStoreRest;
-import com.efigence.redhamster.data.store.IssueEntityStore;
-import com.efigence.redhamster.data.store.IssueEntityStoreRest;
+import com.efigence.redhamster.data.store.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dagger.Module;
@@ -77,6 +75,21 @@ public class ApiModule {
                                                  ApiAccessKeyProvider apiAccessKeyProvider,
                                                  @Named("BaseApiUrl") String baseApiUrl){
         return new IssueEntityStoreRest(httpClient, gson, apiAccessKeyProvider, baseApiUrl);
+    }
+
+    @Provides
+    @Singleton
+    ProjectEntityStore provideProjectEntityStore(OkHttpClient httpClient,
+                                                 Gson gson,
+                                                 ApiAccessKeyProvider apiAccessKeyProvider,
+                                                 @Named("BaseApiUrl") String baseApiUrl){
+        return new ProjectEntityStoreRest(httpClient, gson, apiAccessKeyProvider, baseApiUrl);
+    }
+
+    @Provides
+    @Singleton
+    EnumerationStore provideEnumerationStore(Context context){
+        return new EnumerationStoreImpl(context);
     }
 
 }

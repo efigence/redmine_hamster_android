@@ -2,37 +2,37 @@ package com.efigence.redhamster.ui.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import com.efigence.redhamster.ui.R;
+import com.efigence.redhamster.ui.presenters.SplashPresenter;
+import com.efigence.redhamster.ui.view.base.BaseAppCompatActivity;
+
+import javax.inject.Inject;
 
 
-public class SplashScreenActivity extends AppCompatActivity {
-    private static final int STOP_SPLASH = 0;
-    //time in milliseconds
-    private static final int SPLASH_TIME = 3000;
+public class SplashScreenActivity extends BaseAppCompatActivity implements SplashPresenter.SplashUI {
 
-    private final Handler splashHandler = new Handler() {
-        /* (non-Javadoc)
-         * @see android.os.Handler#handleMessage(android.os.Message)
-         */
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case STOP_SPLASH:
-                    startActivity(new Intent(SplashScreenActivity.this, ApplicationActivity.class));
-                    finish();
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
+    @Inject SplashPresenter presenter;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.onAttach(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.onDetach();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getApplicationComponent().inject(this);
+
+        presenter.initData();
+
         setContentView(R.layout.activity_splash_screen);
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -41,16 +41,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        delayedHide(SPLASH_TIME);
+    public void openApplication() {
+        startActivity(new Intent(this, ApplicationActivity.class));
+        finish();
     }
-
-    private void delayedHide(int delayMillis) {
-        Message msg = new Message();
-        msg.what = STOP_SPLASH;
-        splashHandler.sendMessageDelayed(msg, delayMillis);
-    }
-
 }

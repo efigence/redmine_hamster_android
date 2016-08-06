@@ -4,6 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="issues_tab_0">Assigned to me</string>
     <string name="issues_tab_1">My recently used</string>
+    <string name="issues_tab_2">All issues</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,11 +17,14 @@
     <string name="startIssueInfo">Issue id</string>
     <string name="startIssueStart">Start</string>
     <string name="startedIssueStop">Stop</string>
-    <string name="not_started_issue_info">W chwili obecnej nie masz wystartowanych zadań</string>
+    <string name="not_started_issue_info">Already you don\'t have started issue</string>
 
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="menu_report">Report</string>
     <string name="menu_delete">Delete</string>
+    <string name="nav_all_issues">All issues</string>
+    <string name="show_filters">show filters</string>
+    <string name="hide_filters">hide filters</string>
+    <string name="select_project">[select project]</string>
+    <string name="select_status">[select status]</string>
 </resources>

@@ -65,6 +65,10 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
                 .subscribe(aVoid -> ui.displayStaredIssue());
     }
 
+    public void onDisplayAllIssues() {
+        ui.displayAllIssues();
+    }
+
     public interface ApplicationUI extends UI {
 
         void displayStaredIssue();
@@ -73,6 +77,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
         void displayRecentlyUsed();
         void displaySettings();
         void displayStartIssue(String issueId);
+        void displayAllIssues();
     }
 
 }

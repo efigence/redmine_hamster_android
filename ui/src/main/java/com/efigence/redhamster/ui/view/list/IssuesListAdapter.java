@@ -66,6 +66,16 @@ public class IssuesListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addIssues(List<IssueViewModel> issues){
+        Preconditions.checkNotNull(issues, "Issues cannot be null.");
+        if (this.issues.isEmpty()){
+            this.issues = issues;
+        } else {
+            this.issues.addAll(issues);
+        }
+        notifyDataSetChanged();
+    }
+
     static class ViewHolder {
 
         @Bind(R.id.issue_id) TextView issueId;

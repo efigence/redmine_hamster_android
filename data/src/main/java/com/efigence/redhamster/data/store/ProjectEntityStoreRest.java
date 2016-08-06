@@ -1,23 +1,25 @@
 package com.efigence.redhamster.data.store;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.efigence.redhamster.data.ApiAccessKeyProvider;
+import com.efigence.redhamster.data.model.KeyValue;
 import com.efigence.redhamster.data.model.ProjectEntity;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 import javax.inject.Named;
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntityStore {
 
-    private static final String PROJECTS = "projects.json";
-    private static final long RELOAD_FREQUENCY = 1000*60*15;
+    private static final String PROJECTS = "projects.json?limit=%s&offset=%s";
+    private static final long RELOAD_FREQUENCY = TimeUnit.MINUTES.toMillis(15);
 
     private final Map<String, ProjectEntity> projects = new HashMap<>();
     private long lastReloadTime = -1;
@@ -32,21 +34,32 @@ public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntity
     @Override
     public ProjectEntity getProject(String id){
         if (shouldReloadProjects()){
-            reloadProjects();
+            loadAllProjects();
         }
         return projects.get(id);
     }
 
-    private List<ProjectEntity> getProjects() {
-        Call call = getCall(PROJECTS);
-        return gson.fromJson(execute(call), projectsListType());
+    @Override
+    public List<KeyValue> getProjects() {
+        return Stream.of(projects.values())
+                .map(project -> new KeyValue(project.getId(), project.getName()))
+                .collect(Collectors.toList());
     }
 
-    private void reloadProjects() {
+    @Override
+    public void loadAllProjects() {
         projects.clear();
-        for (ProjectEntity project: getProjects()) {
-            projects.put(project.getId(), project);
-        }
+        int limit = 20;
+        int offset = 0;
+        ResponseProjectsWrapper response;
+        do {
+            Call call = getCall(String.format(PROJECTS, limit, offset));
+            response = gson.fromJson(execute(call), ResponseProjectsWrapper.class);
+            Stream.of(response.projects)
+                    .filter(project -> project.getStatus().equals(1))
+                    .forEach(project -> projects.put(project.getId(), project));
+            offset += limit;
+        } while (response.total_count > offset);
         lastReloadTime = getTime();
     }
 
@@ -64,7 +77,10 @@ public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntity
         return new Date().getTime();
     }
 
-    private Type projectsListType() {
-        return new TypeToken<Map<String, List<ProjectEntity>>>(){}.getType();
+    private static class ResponseProjectsWrapper {
+        List<ProjectEntity> projects;
+        long total_count;
+        long offset;
+        long limit;
     }
 }

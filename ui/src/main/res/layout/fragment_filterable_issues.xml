@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:weightSum="1"
+              tools:context=".ui.FilterableIssuesListFragment"
+              android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/section_label"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textStyle="bold"
+            android:paddingBottom="5dp"
+            android:layout_weight="0.08"/>
+
+    <TextView
+            android:id="@+id/show_filters_container"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:gravity="center"
+            android:text="@string/show_filters"
+            android:textColor="@android:color/holo_red_light"/>
+
+    <LinearLayout android:id="@+id/container_filters"
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="0.05"
+                  android:visibility="gone"
+                  android:weightSum="1">
+
+        <Spinner android:id="@+id/spinner_projects"
+                 android:layout_weight="0.5"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"/>
+
+        <Spinner android:id="@+id/spinner_statuses"
+                 android:layout_weight="0.5"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/listView"
+            android:layout_weight="0.8"/>
+
+    <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom|center"
+            android:layout_weight="0.05"
+            android:visibility="gone"/>
+
+</LinearLayout>

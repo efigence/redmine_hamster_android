@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.lang.Long.parseLong;
+
 @Singleton
 public class HamsterEntityToHamsterIssueModelMapper {
 
@@ -28,20 +30,29 @@ public class HamsterEntityToHamsterIssueModelMapper {
 
     public HamsterIssue toModel(HamsterEntity entity){
         HamsterIssue hamsterIssue = new HamsterIssue();
-        hamsterIssue.setId(Long.parseLong(entity.getId()));
+        hamsterIssue.setId(parseLong(entity.getId()));
         hamsterIssue.setStartDate(nullSafeParseDate(entity.getStart_at()));
         hamsterIssue.setEndDate(nullSafeParseDate(entity.getEnd_at()));
         hamsterIssue.setSpendTime(entity.getSpend_time());
 
-        Issue issue = new Issue();
-        issue.setId(Long.parseLong(entity.getIssue_id()));
         IssueEntity issueEntity = issueEntityStore.getIssueEntity(entity.getIssue_id());
-        issue.setType(issueEntity.getTracker().getName());
-        issue.setSubject(issueEntity.getSubject());
-        issue.setProject(issueEntity.getProject().getName());
-
-        hamsterIssue.setIssue(issue);
+        hamsterIssue.setIssue(toModel(issueEntity));
         return hamsterIssue;
+    }
+
+    public Issue toModel(IssueEntity entity){
+        Issue issue = new Issue();
+        issue.setId(parseLong(entity.getId()));
+        issue.setSubject(entity.getSubject());
+        issue.setProject(entity.getProject().getName());
+        issue.setType(entity.getTracker().getName());
+        return issue;
+    }
+
+    public List<Issue> toModel(List<IssueEntity> entities){
+        return Stream.of(entities)
+                .map(entity -> toModel(entity))
+                .collect(Collectors.toList());
     }
 
     public Map<String, List<HamsterIssue>> toModel(Map<String, List<HamsterEntity>> entities){

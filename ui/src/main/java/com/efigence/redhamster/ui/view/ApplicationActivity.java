@@ -20,6 +20,7 @@ import com.efigence.redhamster.ui.R;
 import com.efigence.redhamster.ui.di.components.ApplicationComponent;
 import com.efigence.redhamster.ui.presenters.ApplicationPresenter;
 import com.efigence.redhamster.ui.view.base.BaseAppCompatActivity;
+import com.efigence.redhamster.ui.view.list.FilterableIssuesListFragment;
 import com.efigence.redhamster.ui.view.list.IssuesListFragment;
 import com.efigence.redhamster.ui.view.list.ReadyToReportIssuesFragment;
 import com.efigence.redhamster.ui.view.settings.SettingsFragment;
@@ -40,6 +41,7 @@ public class ApplicationActivity extends BaseAppCompatActivity
     @Inject ReadyToReportIssuesFragment readyToReport;
     @Inject @Named("AssignedToMeFragment") IssuesListFragment assignedToMe;
     @Inject @Named("MyRecentlyUsedFragment") IssuesListFragment recentlyUsed;
+    @Inject FilterableIssuesListFragment allIssues;
     @Inject SettingsFragment settingsFragment;
 
     @Override
@@ -120,6 +122,8 @@ public class ApplicationActivity extends BaseAppCompatActivity
             presenter.onDisplayMyRecentlyUsed();
         } else if (id == R.id.nav_assigned_to_me) {
             presenter.onDisplayAssignedToMe();
+        } else if (id == R.id.nav_all_issues) {
+            presenter.onDisplayAllIssues();
         } else if (id == R.id.nav_settings) {
             presenter.onDisplaySettings();
         }
@@ -147,6 +151,11 @@ public class ApplicationActivity extends BaseAppCompatActivity
     @Override
     public void displayRecentlyUsed() {
         displayFragment(recentlyUsed);
+    }
+
+    @Override
+    public void displayAllIssues() {
+        displayFragment(allIssues);
     }
 
     @Override

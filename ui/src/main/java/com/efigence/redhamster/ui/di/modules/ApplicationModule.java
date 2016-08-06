@@ -12,12 +12,10 @@ import com.efigence.redhamster.domain.usecase.*;
 import com.efigence.redhamster.ui.AndroidApplication;
 import com.efigence.redhamster.ui.model.mapper.IssueToViewModelMapper;
 import com.efigence.redhamster.ui.presenters.ApplicationPresenter;
+import com.efigence.redhamster.ui.presenters.list.FilterableIssuesListPresenter;
 import com.efigence.redhamster.ui.presenters.list.IssuesListPresenter;
 import com.efigence.redhamster.ui.presenters.list.ReadyToReportListPresenter;
-import com.efigence.redhamster.ui.view.list.IssuesListAdapter;
-import com.efigence.redhamster.ui.view.list.IssuesListFragment;
-import com.efigence.redhamster.ui.view.list.ReadyToReportIssuesFragment;
-import com.efigence.redhamster.ui.view.list.ReadyToReportIssuesListAdapter;
+import com.efigence.redhamster.ui.view.list.*;
 import dagger.Module;
 import dagger.Provides;
 
@@ -43,8 +41,9 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    IssueDataSource provideIssueDataSource(HamsterEntityStore hamsterEntityStore, HamsterEntityToHamsterIssueModelMapper mapper, MyIssueEntityToIssueModelMapper myIssueEntityMapper){
-        return new IssueDataSourceImpl(hamsterEntityStore, mapper, myIssueEntityMapper);
+    IssueDataSource provideIssueDataSource(HamsterEntityStore hamsterEntityStore, HamsterEntityToHamsterIssueModelMapper mapper,
+                                           MyIssueEntityToIssueModelMapper myIssueEntityMapper, IssueEntityStore issueEntityStore){
+        return new IssueDataSourceImpl(hamsterEntityStore, mapper, myIssueEntityMapper, issueEntityStore);
     }
 
     @Provides
@@ -110,6 +109,14 @@ public class ApplicationModule {
     ReadyToReportIssuesFragment provideReadyToReportIssuesFragment(ReadyToReportIssuesListAdapter listAdapter,
                                                                    ReadyToReportListPresenter presenter){
         return new ReadyToReportIssuesFragment(presenter, listAdapter);
+    }
+
+    @Provides
+    @Singleton
+    FilterableIssuesListFragment provideFilterableIssuesListFragment(IssuesListAdapter listAdapter,
+                                                     FilterableIssuesListPresenter presenter,
+                                                     ApplicationPresenter applicationPresenter){
+        return new FilterableIssuesListFragment(2, listAdapter, presenter, applicationPresenter);
     }
 
 }
