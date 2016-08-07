@@ -39,7 +39,7 @@ public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.S
                     if (issue != null){
                         startTimer(issue);
                     }
-                });
+                }, catchException());
     }
 
     private void startTimer(HamsterIssueViewModel issueViewModel) {
@@ -53,7 +53,7 @@ public class StartedIssuePresenter extends BasePresenter<StartedIssuePresenter.S
                 .subscribe(aVoid -> {
                     stopTimer();
                     onDisplay();
-                });
+                }, catchException());
     }
 
     private void stopTimer(){

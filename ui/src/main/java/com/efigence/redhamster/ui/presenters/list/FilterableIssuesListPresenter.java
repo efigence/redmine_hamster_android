@@ -63,7 +63,7 @@ public class FilterableIssuesListPresenter extends BasePresenter<FilterableIssue
                         ui.addIssues(issueViewModels);
                     }
                     ui.hideProgressBar();
-                });
+                }, catchException());
     }
 
     public interface IssueListUI extends UI {

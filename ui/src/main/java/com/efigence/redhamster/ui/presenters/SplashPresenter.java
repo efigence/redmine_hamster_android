@@ -27,7 +27,7 @@ public class SplashPresenter extends BasePresenter<SplashPresenter.SplashUI> {
                 createObservableOnUi(loadProjectsUseCase),
                 createObservableOnUi(loadStatusesUseCase),
                 (first, second) -> null
-        )).subscribe(aVoid -> ui.openApplication());
+        )).subscribe(aVoid -> ui.openApplication(), catchException());
     }
 
     public interface SplashUI extends UI {

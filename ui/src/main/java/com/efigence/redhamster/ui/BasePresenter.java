@@ -7,6 +7,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 
@@ -76,6 +77,14 @@ public abstract class BasePresenter<T extends UI> implements Presenter<T> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(p -> p.second != null)
                 .map(p -> p.first);
+    }
+
+    protected Action1<Throwable> catchException() {
+        return (e) -> {
+            new Thread(() -> {
+                throw new RuntimeException(e);
+            }).start();
+        };
     }
 
     private class Pair<Result, T> {

@@ -35,7 +35,7 @@ public class SettingsPresenter extends BasePresenter<SettingsPresenter.SettingsU
             } else {
                 ui.displayErrorMessage("Invalid access key");
             }
-        });
+        }, catchException());
     }
 
     public interface SettingsUI extends UI {

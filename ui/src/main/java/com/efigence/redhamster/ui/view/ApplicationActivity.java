@@ -3,6 +3,8 @@ package com.efigence.redhamster.ui.view;
 import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -30,7 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class ApplicationActivity extends BaseAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ApplicationPresenter.ApplicationUI {
+        implements NavigationView.OnNavigationItemSelectedListener, ApplicationPresenter.ApplicationUI, Thread.UncaughtExceptionHandler {
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
@@ -60,6 +62,7 @@ public class ApplicationActivity extends BaseAppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(this);
         ApplicationComponent applicationComponent = getApplicationComponent();
         applicationComponent.inject(this);
 
@@ -82,7 +85,6 @@ public class ApplicationActivity extends BaseAppCompatActivity
 
     @Override
     public void onBackPressed() {
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -102,7 +104,6 @@ public class ApplicationActivity extends BaseAppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -195,5 +196,35 @@ public class ApplicationActivity extends BaseAppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.app_container, fragment)
                 .commit();
+    }
+
+    private void showError(Throwable e){
+        String title = e.getClass().getSimpleName();
+        String message = e.getMessage();
+        if (e instanceof RuntimeException){
+            RuntimeException ex = (RuntimeException) e;
+            title = ex.getCause().getClass().getSimpleName();
+            message = ex.getCause().getMessage();
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setNeutralButton("OK", null)
+                .show();
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+        if(isUIThread()) {
+            showError(ex);
+        } else {
+            //handle non UI thread throw uncaught exception
+            new Handler(Looper.getMainLooper()).post(() -> showError(ex));
+        }
+    }
+
+    public boolean isUIThread(){
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 }

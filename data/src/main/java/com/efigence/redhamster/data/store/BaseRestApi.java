@@ -34,7 +34,7 @@ public class BaseRestApi {
             if (response.isSuccessful()){
                 return response.body().string();
             }
-            throw new ApiExecutionException("Something wrong: " + response.code() + ", " + response.message(), response.code());
+            throw new ApiExecutionException(response.message(), response.code());
         } catch (IOException e) {
             e.printStackTrace();
         }

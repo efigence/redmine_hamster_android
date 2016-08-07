@@ -62,7 +62,7 @@ public class ApplicationPresenter extends BasePresenter<ApplicationPresenter.App
 
     public void startIssue(String issueId){
         createObservableOnUi(startIssueUseCase, issueId)
-                .subscribe(aVoid -> ui.displayStaredIssue());
+                .subscribe(aVoid -> ui.displayStaredIssue(), catchException());
     }
 
     public void onDisplayAllIssues() {

@@ -5,7 +5,7 @@ public class ApiExecutionException extends RuntimeException {
     private final int code;
 
     public ApiExecutionException(String detailMessage, int code) {
-        super(detailMessage);
+        super(code + ": " + detailMessage);
         this.code = code;
     }
 

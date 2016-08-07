@@ -27,17 +27,17 @@ public class ReadyToReportListPresenter extends BasePresenter<ReadyToReportListP
 
     public void onDisplayIssues(){
         createObservableOnUi(loadIssuesUseCase)
-                .subscribe(issues -> ui.refreshIssues(issues));
+                .subscribe(issues -> ui.refreshIssues(issues), catchException());
     }
 
     public void reportIssue(HamsterIssue issue) {
         createObservableOnUi(reportIssueUseCase, String.valueOf(issue.getId()))
-                .subscribe(aVoid -> onDisplayIssues());
+                .subscribe(aVoid -> onDisplayIssues(), catchException());
     }
 
     public void deleteIssue(HamsterIssue issue) {
         createObservableOnUi(deleteIssueUseCase, String.valueOf(issue.getId()))
-                .subscribe(aVoid -> onDisplayIssues());
+                .subscribe(aVoid -> onDisplayIssues(), catchException());
     }
 
     public interface ReadyToReportListUI extends UI {

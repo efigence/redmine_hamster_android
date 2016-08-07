@@ -24,7 +24,7 @@ public class IssuesListPresenter extends BasePresenter<IssuesListPresenter.Issue
     public void onDisplayIssues(){
         createObservableOnUi(useCase)
                 .filter(issues -> ui != null)
-                .subscribe(issues -> ui.refreshIssues(mapper.toViewModel(issues)));
+                .subscribe(issues -> ui.refreshIssues(mapper.toViewModel(issues)), catchException());
     }
 
     public interface IssueListUI extends UI {
