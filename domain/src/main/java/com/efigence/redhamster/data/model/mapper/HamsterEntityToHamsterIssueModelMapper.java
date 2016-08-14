@@ -71,9 +71,14 @@ public class HamsterEntityToHamsterIssueModelMapper {
             return null;
         }
         try {
-            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-            calendar.setTime(DATE_FORMAT.parse(date));
-            return calendar.getTime();
+            Date dateInUTC = DATE_FORMAT.parse(date);
+            TimeZone timeZone = TimeZone.getDefault();
+            long time = dateInUTC.getTime() + timeZone.getRawOffset();
+            boolean daylightTime = timeZone.inDaylightTime(dateInUTC);
+            if (daylightTime){
+                time += timeZone.getDSTSavings();
+            }
+            return new Date(time);
         } catch (ParseException e) {
             e.printStackTrace();
         }
