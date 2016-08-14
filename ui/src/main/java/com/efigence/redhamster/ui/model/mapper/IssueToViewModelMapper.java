@@ -21,7 +21,8 @@ public class IssueToViewModelMapper {
     public IssueViewModel toViewModel(Issue issue){
         return new IssueViewModel(
                 String.valueOf(issue.getId()),
-                issue.getSubject()
+                issue.getSubject(),
+                issue.getProject()
         );
     }
 

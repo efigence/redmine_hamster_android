@@ -6,6 +6,7 @@ import com.efigence.redhamster.data.model.mapper.HamsterEntityToHamsterIssueMode
 import com.efigence.redhamster.data.model.mapper.MyIssueEntityToIssueModelMapper;
 import com.efigence.redhamster.data.store.HamsterEntityStore;
 import com.efigence.redhamster.data.store.IssueEntityStore;
+import com.efigence.redhamster.data.store.ProjectEntityStore;
 import com.efigence.redhamster.domain.datasource.IssueDataSource;
 import com.efigence.redhamster.domain.datasource.IssueDataSourceImpl;
 import com.efigence.redhamster.domain.usecase.*;
@@ -54,8 +55,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    MyIssueEntityToIssueModelMapper provideMyIssueEntityToIssueModelMapper(IssueEntityStore issueEntityStore){
-        return new MyIssueEntityToIssueModelMapper(issueEntityStore);
+    MyIssueEntityToIssueModelMapper provideMyIssueEntityToIssueModelMapper(IssueEntityStore issueEntityStore, ProjectEntityStore projectEntityStore){
+        return new MyIssueEntityToIssueModelMapper(issueEntityStore, projectEntityStore);
     }
 
     @Provides

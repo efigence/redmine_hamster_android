@@ -5,10 +5,12 @@ public class IssueViewModel {
 
     private final String id;
     private final String subject;
+    private final String project;
 
-    public IssueViewModel(String id, String subject) {
+    public IssueViewModel(String id, String subject, String project) {
         this.id = id;
         this.subject = subject;
+        this.project = project;
     }
 
     public String getId() {
@@ -19,4 +21,7 @@ public class IssueViewModel {
         return subject;
     }
 
+    public String getProject() {
+        return project;
+    }
 }

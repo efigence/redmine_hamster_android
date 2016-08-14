@@ -57,6 +57,8 @@ public class IssuesListAdapter extends BaseAdapter {
         IssueViewModel issue = issues.get(position);
         holder.issueId.setText(String.valueOf(issue.getId()));
         holder.issueSubject.setText(issue.getSubject());
+        holder.issueProject.setText(issue.getProject());
+        holder.issueProject.setVisibility(issue.getProject() != null ? View.VISIBLE : View.GONE);
         return view;
     }
 
@@ -80,6 +82,7 @@ public class IssuesListAdapter extends BaseAdapter {
 
         @Bind(R.id.issue_id) TextView issueId;
         @Bind(R.id.issue_subject) TextView issueSubject;
+        @Bind(R.id.issue_project) TextView issueProject;
 
         ViewHolder (View view){
             ButterKnife.bind(this, view);

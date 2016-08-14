@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntityStore {
 
     private static final String PROJECTS = "projects.json?limit=%s&offset=%s";
-    private static final long RELOAD_FREQUENCY = TimeUnit.MINUTES.toMillis(15);
+    private static final long RELOAD_FREQUENCY = TimeUnit.MINUTES.toMillis(60);
 
     private final Map<String, ProjectEntity> projects = new HashMap<>();
     private long lastReloadTime = -1;
