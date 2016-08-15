@@ -21,7 +21,7 @@ import java.util.List;
 public class FilterableIssuesListFragment extends BaseFragment implements FilterableIssuesListPresenter.IssueListUI {
 
     @Bind(R.id.section_label) TextView textView;
-    @Bind(R.id.show_filters_container) TextView showFilters;
+    @Bind(R.id.show_filters_container) ImageButton showFilters;
     @Bind(R.id.container_filters) LinearLayout filtersContainer;
     @Bind(R.id.spinner_projects) Spinner projects;
     @Bind(R.id.spinner_statuses) Spinner statuses;
@@ -91,10 +91,10 @@ public class FilterableIssuesListFragment extends BaseFragment implements Filter
         showFilters.setOnClickListener(v -> {
             if (filtersContainer.getVisibility() == View.VISIBLE){
                 filtersContainer.setVisibility(View.GONE);
-                showFilters.setText(getString(R.string.show_filters));
+                showFilters.setImageDrawable(getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_48dp));
             } else {
                 filtersContainer.setVisibility(View.VISIBLE);
-                showFilters.setText(getString(R.string.hide_filters));
+                showFilters.setImageDrawable(getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_48dp));
             }
         });
 

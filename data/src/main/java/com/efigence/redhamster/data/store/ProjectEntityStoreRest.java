@@ -10,10 +10,7 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 import javax.inject.Named;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntityStore {
@@ -78,7 +75,7 @@ public class ProjectEntityStoreRest extends BaseRestApi implements ProjectEntity
     }
 
     private static class ResponseProjectsWrapper {
-        List<ProjectEntity> projects;
+        List<ProjectEntity> projects = Collections.emptyList();
         long total_count;
         long offset;
         long limit;

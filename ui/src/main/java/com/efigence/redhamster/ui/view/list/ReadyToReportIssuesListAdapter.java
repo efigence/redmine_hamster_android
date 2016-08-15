@@ -57,7 +57,7 @@ public class ReadyToReportIssuesListAdapter extends BaseExpandableListAdapter {
         HamsterIssue issue = (HamsterIssue) getChild(groupPosition, childPosition);
         holder.issueId.setText(String.valueOf(issue.getId()));
         holder.issueSubject.setText(issue.getIssue().getSubject());
-        String spendTime = issue.getSpendTime() + "h";
+        String spendTime = issue.getSpendTime() + " h";
         holder.issueSpendTime.setText(spendTime);
         return view;
     }
